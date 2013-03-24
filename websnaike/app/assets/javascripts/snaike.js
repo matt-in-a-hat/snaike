@@ -437,12 +437,12 @@ var initSnaikeGame = function() {
             var name = document.getElementById('snaike_name').value;
             var colour = document.getElementById('snaike_colour').value;
             var ai = document.getElementById('snaike_ai').value;
-            if (name==="") return false;
             restart = function() {
                 var snake = PublicSnake(name, colour, "#000000", {}, ai);
                 if (snake) snake = PrivateSnake(PublicSnake);
                 start(snake);
             }
+            e.preventDefault();
         });
     })();
 

@@ -1,0 +1,23 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @snaike.name %>
+</p>
+
+<p>
+  <b>Ai:</b>
+  <pre><%= @snaike.ai %></pre>
+</p>
+
+<p>
+  <b>Colour:</b>
+  <%= @snaike.colour %>
+  <% 5.times do %>
+  	<span class="colour_block" style="background-color:<%= @snaike.colour %>"></span>
+  <% end %>
+</p>
+
+
+<%= link_to 'Edit', edit_snaike_path(@snaike) %> |
+<%= link_to 'Back', snaikes_path %>

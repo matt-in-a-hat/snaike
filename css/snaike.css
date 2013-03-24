@@ -11,3 +11,8 @@ body {
   left: 15%; }
   .content img {
     width: 100%; }
+
+.colour_block {
+  display: inline-block;
+  width: 16px;
+  height: 16px; }

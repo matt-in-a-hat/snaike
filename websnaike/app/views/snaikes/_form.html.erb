@@ -1,0 +1,69 @@
+<%= form_for(@snaike) do |f| %>
+  <% if @snaike.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@snaike.errors.count, "error") %> prohibited this snaike from being saved:</h2>
+
+      <ul>
+      <% @snaike.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+ <div class="container">
+    <div class="row">
+      <div class="span12">
+        <h2>Create your own snaike AI</h2>
+        <form class="form-inline">
+          <pre>
+            var MySnake = function (gridWidth, gridHeight) {
+              var _this = {};
+              //Name used for scoreboard
+              _this.name = "<%= f.text_field :name %>";
+              //CSS body colour
+              _this.colour = "<%= f.text_field :colour %>";
+              //Private variables
+              var <input type="text"/> = <textarea rows="1"></textarea>;
+              <button type="button" class="btn" id="addVar">+</button>
+              //Strategy
+              _this.think = function (<span id="myPosition">myPosition</span>, <span id="myDirection">myDirection</span>, <span id="otherSnakes">otherSnakes</span>) {
+                <%= f.text_area :ai, :class=>"ai_input" %>
+              };
+              return _this;
+            };
+          </pre>
+          <button type="button" class="btn btn-primary btn-large" id="test_ai">Test inline</button>
+          <button class="btn btn-primary btn-large">Submit snaike</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!--<script src="js/jquery-min.js"></script> -->
+  <!--<script src="js/bootstrap.min.js"></script> -->
+  <!--<script src="js/bootstrap-tooltip.js"></script> -->
+  <!--<script src="js/bootstrap-popover.js"></script> -->
+  <script>
+    $('#myPosition').popover({
+      title: "myPosition:",
+      content: "Insert documentation here.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#myDirection').popover({
+      title: "myDirection:",
+      content: "Insert documentation here.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#otherSnakes').popover({
+      title: "otherSnakes:",
+      content: "Insert documentation here.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#addVar').on('click', function() {
+
+    });
+  </script>
+  <% end %>

@@ -218,6 +218,7 @@ var initSnaikeGame = function() {
             })();
         } catch (e) {
             killSnake(_this, e);
+            return false;
         }
         return _this;
     };
@@ -304,6 +305,7 @@ var initSnaikeGame = function() {
     };
 
     var tick = function() {
+        if (!allSnakes.ticking) return;
         var movingCount = 0,
             toMoveCount = 0,
             lastAlive,
@@ -317,6 +319,7 @@ var initSnaikeGame = function() {
         });
         if (toMoveCount<2) {
             gameRenderer.gameOver(lastAlive);
+            allSnakes.ticking = false;
             return;
         }
         var afterMove = function() {
@@ -411,30 +414,35 @@ var initSnaikeGame = function() {
 
     var allSnakes;
 
-    var start = function(re) {
+    var start = function(usersSnake) {
+        var re = allSnakes && allSnakes.ticking;
         allSnakes = [
             PrivateSnake(MattsPantsMonster()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
-            PrivateSnake(SexyAndIKnowIt()),
             PrivateSnake(SexyAndIKnowIt())
         ];
+        if (usersSnake) allSnakes.push(usersSnake()); 
         if (!re) tick();
     };
+
+    var restart = start;
 
     (function() {
         var resetBtn = document.getElementById('reset');
         resetBtn.addEventListener('click', function (e) {
-            start(true);
+            restart();
+        });
+
+        var testAiBtn = document.getElementById('test_ai');
+        testAiBtn.addEventListener('click', function (e) {
+            var name = document.getElementById('snaike_name').value;
+            var colour = document.getElementById('snaike_colour').value;
+            var ai = document.getElementById('snaike_ai').value;
+            if (name==="") return false;
+            restart = function() {
+                var snake = PublicSnake(name, colour, "#000000", {}, ai);
+                if (snake) snake = PrivateSnake(PublicSnake);
+                start(snake);
+            }
         });
     })();
 

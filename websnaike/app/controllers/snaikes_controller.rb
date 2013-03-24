@@ -2,6 +2,7 @@ class SnaikesController < ApplicationController
   # GET /snaikes
   # GET /snaikes.json
   def home
+    @snaikes = Snaike.all
     @snaike = Snaike.new
   end
 

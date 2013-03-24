@@ -147,7 +147,7 @@ var initSnaikeGame = function() {
             "Right": 1
         };
         _this.turn = 0;
-        window.addEventListener('keydown', function (e) {
+        gameRenderer.canvas.parentElement.addEventListener('keydown', function (e) {
             var key = e.keyIdentifier;
             if (keys[key]) {
                 e.preventDefault();
@@ -209,17 +209,18 @@ var initSnaikeGame = function() {
         _this.data.gridHeight = gameRenderer.gridHeight;
         _this.calculatePosition = calculatePosition;
         _this.calculateDirection = calculateDirection;
-        try {
+        // try {
             _this.think = (function() {
                 // TODO: Potentially attempt to sandbox here
                 var f;
                 eval("f = function (myPosition, myDirection, otherSnakes) { "+thinkFunction+" }");
                 return f;
             })();
-        } catch (e) {
-            killSnake(_this, e);
-            return false;
-        }
+        console.log("public", _this, "think", _this.think);
+        // } catch (e) {
+        //     killSnake(_this, e);
+        //     return false;
+        // }
         return _this;
     };
 
@@ -351,13 +352,13 @@ var initSnaikeGame = function() {
         if (snake.turn === null) {
             setTimeout(function() {
                 var direction;
-                try {
+                // try {
                     (function() {
                         direction = snake.publicSnake.think(snake.position.slice(), snake.direction, otherSnakes);
                     })();
-                } catch (e) {
-                    killSnake(snake, e);
-                }
+                // } catch (e) {
+                //     killSnake(snake, e);
+                // }
                 snake.turn = Number(direction);
                 if (isNaN(snake.turn)) {
                     snake.turn = 0;
@@ -414,14 +415,24 @@ var initSnaikeGame = function() {
 
     var allSnakes;
 
-    var start = function(usersSnake) {
-        var re = allSnakes && allSnakes.ticking;
-        allSnakes = [
-            PrivateSnake(MattsPantsMonster()),
-            PrivateSnake(SexyAndIKnowIt())
-        ];
-        if (usersSnake) allSnakes.push(usersSnake()); 
-        if (!re) tick();
+    var start = function(snakeConstructors) {
+        restart = function() {
+            var re = allSnakes && allSnakes.ticking;
+            allSnakes = [
+                //PrivateSnake(MattsPantsMonster()),
+                PrivateSnake(SexyAndIKnowIt())
+            ];
+            allSnakes.ticking = true;
+            if (snakeConstructors) {
+                snakeConstructors.forEach(function(d) {
+                    var snake = PublicSnake.apply(this, d);//(d[0], d[1], d[2], d[3], d[4]);
+                    if (snake) snake = PrivateSnake(snake);
+                    if (snake) allSnakes.push(snake); 
+                });
+            }
+            if (!re) tick();
+        }
+        restart();
     };
 
     var restart = start;
@@ -437,13 +448,36 @@ var initSnaikeGame = function() {
             var name = document.getElementById('snaike_name').value;
             var colour = document.getElementById('snaike_colour').value;
             var ai = document.getElementById('snaike_ai').value;
-            restart = function() {
-                var snake = PublicSnake(name, colour, "#000000", {}, ai);
-                if (snake) snake = PrivateSnake(PublicSnake);
-                start(snake);
-            }
+            var cons = [name, colour, "#000000", {}, ai];
             e.preventDefault();
+            start([cons]);
         });
+
+        var selectedBtn = document.getElementById('battle_selected');
+        selectedBtn.addEventListener('click', function (e) {
+            var snakeCons = [];
+            var boxs = $('[type="checkbox"]'), i;
+            for (i=0;i<boxs.length;i++) {
+                var box = boxs[i];
+                if (box.checked) {
+                    var tr = $(box).parent().parent()[0];
+                    var id = tr.id.split("_")[1];
+                    var name = $($('#snaikeName_'+id)[0]).text();
+                    var colour = $($('#snaikeColour_'+id)[0]).text();
+                    if (colour == "") colour = "#EEEEEE";
+                    var ai = $($('#snaikeAI_'+id)[0]).text();
+                    snakeCons.push([name, colour, "#000000", {}, ai]);
+                    // function() {
+                    //     var snake = PublicSnake(name, colour, "#000000", {}, ai);
+                    //     if (snake) snake = PrivateSnake(snake);
+                    //     return snake;
+                    // };
+                    // snakeCons.push(cons);
+                }
+            }
+            start(snakeCons);
+        });
+
     })();
 
     start();

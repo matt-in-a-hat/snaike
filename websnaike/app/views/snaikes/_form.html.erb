@@ -13,25 +13,29 @@
 
  <div class="container">
     <div class="row">
-      <div class="span12">
+      <div class="span9">
         <h2>Create your own snaike</h2>
         <form class="form-inline">
           <pre>
-            var MySnake = function (gridWidth, gridHeight) {
-              var _this = {};
-              //Name used for scoreboard
-              _this.name = "<%= f.text_field :name, :required=>"required" %>";
-              //CSS body colour
-              _this.colour = "<%= f.text_field :colour %>";
-              //Strategy
-              _this.think = function (<span id="myPosition">myPosition</span>, <span id="myDirection">myDirection</span>, <span id="otherSnakes">otherSnakes</span>) {
-                <%= f.text_area :ai, :class=>"ai_input" %>
-              };
-              return _this;
-            };
+  //Represents a snake on an n*m grid, the top left (north-west-most) coordinate being [0,0]
+  var MySnake = function (gridWidth, gridHeight) {
+    var _this = {};
+    //Name used for scoreboard
+    _this.name = "<%= f.text_field :name, :required=>"required" %>";
+    //CSS body colour
+    _this.colour = "<%= f.text_field :colour %>";
+    //Strategy
+    //Returns an number indicating if the snake should turn before it moves forward this move
+    //Negative numbers turn left, 0 moves forward without turning, positive numbers turn right
+    //E.g. -1, 0 or 1
+    _this.think = function (<span id="myPosition">myPosition</span>, <span id="myDirection">myDirection</span>, <span id="otherSnakes">otherSnakes</span>) {
+      <%= f.text_area :ai, :class=>"ai_input" %>
+    };
+    return _this;
+  };
           </pre>
-          <button class="btn btn-primary btn-large" id="test_ai">Test inline</button>
-          <button class="btn btn-primary btn-large">Submit snaike</button>
+          <button class="btn btn-primary" id="test_ai">Test inline</button>
+          <button class="btn btn-primary">Submit snaike</button>
         </form>
       </div>
     </div>
@@ -39,19 +43,19 @@
   <script>
     $('#myPosition').popover({
       title: "myPosition:",
-      content: "Insert documentation here.",
+      content: "An array of coordinate pair arrays representing the body of your snake. E.g. [[1,0],[1,1],[1,2]]. The last coordinate is the head of your snake.",
       trigger: "hover",
       placement:"top"
     });
     $('#myDirection').popover({
       title: "myDirection:",
-      content: "Insert documentation here.",
+      content: "A number representing the current direction your next move will be made in if you return 0. 0 - North, 1 - East, 2 - South, 3 - West",
       trigger: "hover",
       placement:"top"
     });
     $('#otherSnakes').popover({
       title: "otherSnakes:",
-      content: "Insert documentation here.",
+      content: "An array of all other snakes current positions e.g. [[[2,0],[2,1]][[13,12],[13,13]]]",
       trigger: "hover",
       placement:"top"
     });

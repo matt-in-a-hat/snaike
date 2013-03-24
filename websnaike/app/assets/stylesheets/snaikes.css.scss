@@ -28,3 +28,17 @@ body {
 .ai_input {
 	width: 400px;
 }
+.pad_bottom {
+	padding: 0 0 20px 0;
+}
+.snaike_select table {
+	width: 100%;
+	max-height: 400px;
+	overflow-y: scroll;
+	tr td {
+		padding: 2px 10px 2px 10px;
+	}
+}
+.hidden_ai {
+	display: none;
+}

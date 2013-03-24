@@ -15,4 +15,5 @@
 //= require snaike
 //= require jquery-min
 //= require bootstrap
+//= require underscore-min
 //= require_tree .

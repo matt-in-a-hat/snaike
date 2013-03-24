@@ -15,12 +15,39 @@
 				</canvas>
 			</div>
 		</div>
-		<button type="button" id="reset">Restart</button>
+		<button type="button" class="btn btn-primary" id="reset">Restart</button>
 	</div>
 	<div>
 		<% @snaike = Snaike.new %>
 		<%= render 'form' %>
 	</div>
+	<div class="snaike_select pad_bottom">
+		<h2>Select the snaikes to battle</h2>
+		<table>
+		  <tr>
+		    <th></th>
+		    <th>Name</th>
+		    <th>Colour</th>
+		    <th></th>
+		    <th></th>
+		    <th></th>
+		  </tr>
+
+		<% @snaikes.each do |snaike| %>
+		  <tr id="snaikeId_<%= snaike.id %>">
+		    <td><input name="select" type="checkbox" /><pre id="snaikeAI_<%= snaike.id %>" class="hidden_ai"><%= snaike.ai %></pre></td>
+		    <td id="snaikeName_<%= snaike.id %>"><%= snaike.name %></td>
+		    <td id="snaikeColour_<%= snaike.id %>" style="background-color:<%= snaike.colour %>"><%= snaike.colour %></td>
+		    <td><%= link_to 'Show', snaike %></td>
+		    <td><%= link_to 'Edit', edit_snaike_path(snaike) %></td>
+		  </tr>
+		<% end %>
+		</table>
+
+	</div>
+		<button type="button" class="btn btn-primary" id="battle_selected">Battle selected snaikes</button>
+		<br />
+		<br />
 </div>
 <script type="text/javascript">
 (function(){

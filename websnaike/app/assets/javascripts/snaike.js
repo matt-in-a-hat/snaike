@@ -27,9 +27,11 @@ var initSnaikeGame = function() {
                     renderer.drawBox(4,4,-2,-2,coordinate,renderer.shadowColour);
                     renderer.drawBox(1,1,-2,-2,coordinate,snake.publicSnake.colour);
                 });
-                var head = snake.position[snake.position.length - 1];
-                var qtr = renderer.gridSize/4, half = renderer.gridSize/2;
-                renderer.drawBox(qtr,qtr,-half,-half,head,snake.publicSnake.headColour);
+                if (!snake.headless) {
+                    var head = snake.position[snake.position.length - 1];
+                    var qtr = renderer.gridSize/4, half = renderer.gridSize/2;
+                    renderer.drawBox(qtr,qtr,-half,-half,head,snake.publicSnake.headColour);
+                }
             },
             drawBox: function(dx,dy,dw,dh,coord,colour) {
                 renderer.context.fillStyle = colour;
@@ -41,6 +43,7 @@ var initSnaikeGame = function() {
                 );
             },
             insultPlayer: function(message) {
+                console.log(message);
                 renderer.context.fillStyle = 'rgba(200, 200, 200, 0.8)';
                 renderer.context.fillRect(0,90,renderer.canvas.width,40);
                 renderer.context.fillStyle = '#000000';
@@ -53,6 +56,28 @@ var initSnaikeGame = function() {
                 } else {
                     renderer.insultPlayer("The cunning of "+winner.name+" out-witted all!");
                 }
+            },
+            // Returns the index into allSnakes of the snake at the grid position given, -1 if there is none
+            snakeAtPosition: function(pos, multiple) {
+                if (!pos || pos.length !== 2) {
+                    return -1;
+                }
+                var x = Number(pos[0]), y = Number(pos[1]);
+                if (isNaN(x)||isNaN(y)||x<0||y<0||x>=renderer.gridWidth||y>=renderer.gridHeight) {
+                    return -1;
+                }
+                var s, p, all = [];
+                for (s=0; s<allSnakes.length; s++) {
+                    for (p=0; p<allSnakes[s].position.length; p++) {
+                        var pos = allSnakes[s].position[p];
+                        if (pos[0]===x && pos[1]===y) {
+                            if (multiple) all.push(s);
+                            else return s;
+                        }
+                    };
+                };
+                if (multiple) return all;
+                else return -1;
             }
         };
         canvas.width = (renderer.gridWidth+1)*renderer.gridSize;
@@ -98,7 +123,7 @@ var initSnaikeGame = function() {
     //         gameRenderer.drawSnake(snake);
     //     }
     // };
-    var calculatePosition = function(pos, dir) {
+    var nextPosition = function(pos, dir) {
         var newPos;
         dir = dir%4;
         if (dir === 0) {
@@ -124,7 +149,7 @@ var initSnaikeGame = function() {
         }
         return newPos;
     };
-    var calculateDirection = function(dir, turn) {
+    var turnDirection = function(dir, turn) {
         if (turn < 0) {
             dir = dir - 1;
         } else if (turn > 0) {
@@ -147,17 +172,17 @@ var initSnaikeGame = function() {
             "Right": 1
         };
         _this.turn = 0;
-        gameRenderer.canvas.parentElement.addEventListener('keydown', function (e) {
-            var key = e.keyIdentifier;
-            if (keys[key]) {
-                e.preventDefault();
-                if (_this.turn===0) {
-                    _this.turn = keys[key];
-                }
-            }
-        });
+        // gameRenderer.canvas.parentElement.addEventListener('keydown', function (e) {
+        //     var key = e.keyIdentifier;
+        //     if (keys[key]) {
+        //         e.preventDefault();
+        //         if (_this.turn===0) {
+        //             _this.turn = keys[key];
+        //         }
+        //     }
+        // });
 
-        _this.think = function (myPosition, otherSnakes, gridWidth, gridHeight) {
+        _this.think = function (snakePositions, myIndex, myDirection) {
             var t = _this.turn;
             _this.turn = 0;
             return t;
@@ -169,19 +194,18 @@ var initSnaikeGame = function() {
     var SexyAndIKnowIt = function () {
         var _this = PublicSnake("Sexy And I Know It", "#4444FF", "#00FF00", {}, "");
 
-        _this.think = function (myPosition, myDirection, otherSnakes) {
+        _this.think = function (snakePositions, myIndex, myDirection) {
             //calculate distance to wall
             //check for collisions with self
             //check for collisions with other snakes
             //decide if should turn to decrease distance to wall
             var probablyGoodMove = Math.random() > 0.90 ? 1 : 0;
-            otherSnakes.push(myPosition);
             var nextCoordinateIsDeath= false;
             myDirection = myDirection + probablyGoodMove;
             myDirection = myDirection % 4;
-            var lastCoordinate = myPosition[myPosition.length - 1];
-            var newCoordinate = _this.calculatePosition(lastCoordinate, myDirection);
-            otherSnakes.forEach(function (snake) {
+            var lastCoordinate = snakePositions[myIndex][snakePositions[myIndex].length - 1];
+            var newCoordinate = nextPosition(lastCoordinate, myDirection);
+            snakePositions.forEach(function (snake) {
                 snake.forEach(function (coordinate) {
                     if (newCoordinate[0] === coordinate[0] &&
                         newCoordinate[1] === coordinate[1]) {
@@ -200,20 +224,21 @@ var initSnaikeGame = function() {
 
     var PublicSnake = function (name, colour, headColour, data, thinkFunction) {
         var _this = {};
+        var gridWidth = gameRenderer.gridWidth; // These are promised in the API form
+        var gridHeight = gameRenderer.gridHeight;
 
         _this.name = name;
         _this.colour = colour;
         _this.headColour = headColour;
         _this.data = data || {};
-        _this.data.gridWidth = gameRenderer.gridWidth;
-        _this.data.gridHeight = gameRenderer.gridHeight;
-        _this.calculatePosition = calculatePosition;
-        _this.calculateDirection = calculateDirection;
+        var nextPosition = nextPosition;
+        var turnDirection = turnDirection;
+        var snakeAtPosition = gameRenderer.snakeAtPosition;
         // try {
             _this.think = (function() {
                 // TODO: Potentially attempt to sandbox here
                 var f;
-                eval("f = function (myPosition, myDirection, otherSnakes) { "+thinkFunction+" }");
+                eval("f = function (snakePositions, myIndex, myDirection) { "+thinkFunction+" }");
                 return f;
             })();
         console.log("public", _this, "think", _this.think);
@@ -302,7 +327,7 @@ var initSnaikeGame = function() {
     var killSnake = function(snake, reason) {
         snake.alive = false;
         snake.turn = null;
-        console.log(snake, reason);
+        console.log(reason, snake);
     };
 
     var tick = function() {
@@ -336,6 +361,7 @@ var initSnaikeGame = function() {
         };
         // Get all the snake positions to pass to think functions
         allSnakes.forEach(function(snake) {
+            // Find movements of all alive snakes
             if (snake.alive) calculateMove(snake, afterMove);
         });
     };
@@ -343,18 +369,20 @@ var initSnaikeGame = function() {
 
 
     var calculateMove = function(snake, afterMove) {
-        var otherSnakes = [];
-        allSnakes.forEach(function(other) {
-            if (other!==snake) {
-                otherSnakes.push(other.position.slice());
+        var snakePositions = [], i, yourIndex;
+        for (i=0; i<allSnakes.length; i++) {
+            var other = allSnakes[i];
+            snakePositions.push(other.position.slice());
+            if (other==snake) {
+                yourIndex = i;
             }
-        });
+        }
         if (snake.turn === null) {
             setTimeout(function() {
                 var direction;
                 // try {
                     (function() {
-                        direction = snake.publicSnake.think(snake.position.slice(), snake.direction, otherSnakes);
+                        direction = snake.publicSnake.think(snakePositions, yourIndex, snake.direction);
                     })();
                 // } catch (e) {
                 //     killSnake(snake, e);
@@ -389,7 +417,7 @@ var initSnaikeGame = function() {
                     snake.direction = 3;
                 }
                 var lastCoordinate = snake.position[snake.position.length - 1];
-                var newCoordinate = calculatePosition(lastCoordinate, snake.direction);
+                var newCoordinate = nextPosition(lastCoordinate, snake.direction);
                 snake.position.push(newCoordinate);
                 snake.turn = null;
             }
@@ -398,18 +426,36 @@ var initSnaikeGame = function() {
     };
 
     var checkForCollisions = function() {
-        allSnakes.forEach(function(headSnake) {
-            var head = headSnake.position[headSnake.position.length - 1];
-            allSnakes.forEach(function(snake) {
-                var i;
-                for (i = 0; i <= snake.position.length - 1; i++) {
-                    if (head!==snake.position[i] && 
-                        head[0] === snake.position[i][0] &&
-                        head[1] === snake.position[i][1]) {
-                        killSnake(headSnake, "Collided with "+snake.name);
-                    }
+        var dehead = [];
+        allSnakes.forEach(function(headSnake, s) {
+            if (headSnake.alive) {
+                var head = headSnake.position[headSnake.position.length - 1];
+
+                var others = gameRenderer.snakeAtPosition(head, true);
+                if (others.length > 1) {
+                    var hadItself = false;
+                    others.forEach(function(s) {
+                        if (allSnakes[s]!==headSnake) {
+                            // Collided with allSnakes[s]
+                            var late = allSnakes[s].alive ? "" : "the late ";
+                            var stupidly = allSnakes[s].alive ? "" : " stupidly";
+                            killSnake(headSnake, headSnake.name+stupidly+" ran into "+late+allSnakes[s].name+"!");
+                            dehead.push(headSnake);
+                        } else {
+                            if (hadItself) {
+                                // Collided with self
+                                killSnake(headSnake, headSnake.name+" killed itself!");
+                            }
+                            hadItself = true;
+                        }
+                    });
                 }
-            });
+            }
+        });
+        // Remove the head if it's in the same position as an alive snake
+        dehead.forEach(function(snake) {
+            snake.position.pop();
+            snake.headless = true;
         });
     };
 
@@ -419,7 +465,7 @@ var initSnaikeGame = function() {
         restart = function() {
             var re = allSnakes && allSnakes.ticking;
             allSnakes = [
-                //PrivateSnake(MattsPantsMonster()),
+                PrivateSnake(MattsPantsMonster()),
                 PrivateSnake(SexyAndIKnowIt())
             ];
             allSnakes.ticking = true;

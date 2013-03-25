@@ -17,8 +17,8 @@
         <h2>Create your own snaike</h2>
         <form class="form-inline">
           <pre>
-  //Represents a snake on an n*m grid, the top left (north-west-most) coordinate being [0,0]
-  var MySnake = function (gridWidth, gridHeight) {
+  //Represents a snake on an n*m grid, the top left coordinate being [0,0]
+  var MySnaike = function (<span id="gridWidth">gridWidth</span>, <span id="gridHeight">gridHeight</span>,<span id="nextPosition">nextPosition</span>, <span id="turnDirection">turnDirection</span>,<span id="snakeAtPosition">snakeAtPosition</span>) {
     var _this = {};
     //Name used for scoreboard
     _this.name = "<%= f.text_field :name, :required=>"required" %>";
@@ -28,7 +28,7 @@
     //Returns an number indicating if the snake should turn before it moves forward this move
     //Negative numbers turn left, 0 moves forward without turning, positive numbers turn right
     //E.g. -1, 0 or 1
-    _this.think = function (<span id="myPosition">myPosition</span>, <span id="myDirection">myDirection</span>, <span id="otherSnakes">otherSnakes</span>) {
+    _this.think = function (<span id="snakePositions">snakePositions</span>, <span id="myIndex">myIndex</span>, <span id="myDirection">myDirection</span>) {
       <%= f.text_area :ai, :class=>"ai_input" %>
     };
     return _this;
@@ -41,21 +41,51 @@
     </div>
   </div>
   <script>
-    $('#myPosition').popover({
-      title: "myPosition:",
-      content: "An array of coordinate pair arrays representing the body of your snake. E.g. [[1,0],[1,1],[1,2]]. The last coordinate is the head of your snake.",
+    $('#gridWidth').popover({
+      title: "gridWidth:",
+      content: "A positive integer representing the total number of grid positions along the horizontal axis.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#gridHeight').popover({
+      title: "gridHeight:",
+      content: "A positive integer representing the total number of grid positions along the vertical axis.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#nextPosition').popover({
+      title: "nextPosition:",
+      content: "function(dir, turn) ... Takes a current direction (0-3) and a possible turn (<0 or >0), returning the direction after turning (0-3).",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#turnDirection').popover({
+      title: "turnDirection:",
+      content: "function(pos, dir) ... Takes a current position ([x,y]) and a direction (0-3) and returns the position resulted from moving 1 square in that direction.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#snakeAtPosition').popover({
+      title: "snakeAtPosition:",
+      content: "function(pos) ... Tests if there's a snake at the given position ([x,y]), returning the index into snakePositions of the occupying snake, or -1 if empty.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#snakePositions').popover({
+      title: "snakePositions:",
+      content: "An array of all snakes current positions e.g. [[[2,0],[2,1]][[13,12],[13,13]]]. The last coordinate in each snake's position array is its head.",
+      trigger: "hover",
+      placement:"top"
+    });
+    $('#myIndex').popover({
+      title: "myIndex:",
+      content: "The index of your snake in the snakePositions array.",
       trigger: "hover",
       placement:"top"
     });
     $('#myDirection').popover({
       title: "myDirection:",
       content: "A number representing the current direction your next move will be made in if you return 0. 0 - North, 1 - East, 2 - South, 3 - West",
-      trigger: "hover",
-      placement:"top"
-    });
-    $('#otherSnakes').popover({
-      title: "otherSnakes:",
-      content: "An array of all other snakes current positions e.g. [[[2,0],[2,1]][[13,12],[13,13]]]",
       trigger: "hover",
       placement:"top"
     });

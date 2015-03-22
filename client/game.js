@@ -3,7 +3,7 @@
 // Date: 2013
 //
 'use strict';
-window.startGame = (function () {
+window.initGame = function () {
 
 
     //context.clearRect(0,0,canvas.width,canvas.height);
@@ -478,5 +478,6 @@ window.startGame = (function () {
         if (!re) tick();
     };
 
+    window.startGame = start;
     return start;
-})();
+};

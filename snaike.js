@@ -25,6 +25,9 @@ if (Meteor.isClient) {
       return Session.get('viewedSnaike')
     }
   })
+  Template.body.onRendered(function () {
+    window.initGame()
+  })
 
   Template.creation.events({
     'submit .edit-snaike': function (event) {

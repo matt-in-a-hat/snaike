@@ -8,6 +8,8 @@ if (Meteor.isClient) {
   var newSnaike = function () {
     return {
       name: 'what',
+      colour: '',
+      code: 'function (snakePositions, myIndex, myDirection) {\n  return 0;\n}',
       createdAt: new Date(),
       version: 0
     }
@@ -29,7 +31,9 @@ if (Meteor.isClient) {
 
       Snaikes.insert({
         createdAt: new Date(),
-        name: event.target.name.value,
+        name: event.target.name.value || 'Nameless',
+        colour: event.target.colour.value || '#DDD',
+        code: event.target.code.value,
         version: Session.get('viewedSnaike').version + 1
       })
 

@@ -4,12 +4,15 @@
 
 <body>
   <div class="container">
-    <header>
-      <h1>Choose the snAIkes to battle</h1>
+    <h1>snAIke!</h1>
+    <canvas id="game_canvas" width="800" height="400">
+    </canvas>
+    <div>
+      <h2>Choose the snAIkes to battle</h2>
       {{#with viewedSnaike}}
         {{> creation}}
       {{/with}}
-    </header>
+    </div>
 
     <ul class="snaike-list">
       {{#each snaikes}}
@@ -21,8 +24,26 @@
 
 <template name="creation">
   <form class="edit-snaike">
-    <input type="text" name="name" value="{{name}}" placeholder="snAIke name" />
-    <button class="save">Save</button>
+    <table>
+      <tr>
+        <td><label for="edit-snaike-name">Snaike name:</label></td>
+        <td><input id="edit-snaike-name" type="text" name="name" value="{{name}}" placeholder="snAIke name" /></td>
+      </tr>
+      <tr>
+        <td><label for="edit-snaike-colour">Colour:</label></td>
+        <td><input id="edit-snaike-colour" type="text" name="colour" value="{{colour}}" placeholder="e.g. #FFF" /></td>
+      </tr>
+      <tr>
+        <td><label for="edit-snaike-code">Code:</label></td>
+      </tr>
+      <tr>
+        <td colspan="2"><textarea id="edit-snaike-code" name="code" cols="80" rows="10" placeholder="Enter your snaike's AI">{{code}}</textarea></td>
+      </tr>
+      <tr>
+        <td><button class="save">Save</button></td>
+        <td></td>
+      </tr>
+    </table>
   </form>
 </template>
 

@@ -165,7 +165,12 @@ window.initGame = function () {
     }
 
     var MattsPantsMonster = function () {
-        var _this = PublicSnake("Matt's Pants Monster", "#F4F400", "#999999", {}, "");
+        var _this = PublicSnake({
+            name: 'Matt\'s Pants Monster',
+            colour: '#F4F400',
+            headColour: '#999999',
+            code: ''
+        });
 
         var keys = {
             "Left": -1,
@@ -192,7 +197,12 @@ window.initGame = function () {
     };
 
     var SexyAndIKnowIt = function () {
-        var _this = PublicSnake("Sexy And I Know It", "#4444FF", "#00FF00", {}, "");
+        var _this = PublicSnake({
+            name: 'Sexy And I Know It',
+            colour: '#4444FF',
+            headColour: '#00FF00',
+            code: ''
+        });
 
         _this.think = function (snakePositions, myIndex, myDirection) {
             //calculate distance to wall
@@ -222,15 +232,14 @@ window.initGame = function () {
         return _this;
     };
 
-    var PublicSnake = function (name, colour, headColour, data, thinkFunction) {
+    var PublicSnake = function (options) {
         var _this = {};
         var gridWidth = gameRenderer.gridWidth; // These are promised in the API form
         var gridHeight = gameRenderer.gridHeight;
 
-        _this.name = name;
-        _this.colour = colour;
-        _this.headColour = headColour;
-        _this.data = data || {};
+        _this.name = options.name;
+        _this.colour = options.colour;
+        _this.headColour = options.headColour;
         var nextPosition = nextPosition;
         var turnDirection = turnDirection;
         var snakeAtPosition = gameRenderer.snakeAtPosition;
@@ -238,7 +247,7 @@ window.initGame = function () {
             _this.think = (function() {
                 // TODO: Potentially attempt to sandbox here
                 var f;
-                eval("f = function (snakePositions, myIndex, myDirection) { "+thinkFunction+" }");
+                eval("f = function (snakePositions, myIndex, myDirection) { "+options.code+" }");
                 return f;
             })();
         console.log("public", _this, "think", _this.think);
@@ -461,16 +470,16 @@ window.initGame = function () {
 
     var allSnakes;
 
-    var start = function (snakeConstructors) {
+    var start = function (snakeObjects) {
         var re = allSnakes && allSnakes.ticking;
         allSnakes = [
             PrivateSnake(MattsPantsMonster()),
             PrivateSnake(SexyAndIKnowIt())
         ];
         allSnakes.ticking = true;
-        if (snakeConstructors) {
-            snakeConstructors.forEach(function(d) {
-                var snake = PublicSnake.apply(this, d);//(d[0], d[1], d[2], d[3], d[4]);
+        if (snakeObjects) {
+            snakeObjects.forEach(function (snakeInfo) {
+                var snake = PublicSnake(snakeInfo);
                 if (snake) snake = PrivateSnake(snake);
                 if (snake) allSnakes.push(snake);
             });

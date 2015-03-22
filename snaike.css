@@ -1,4 +1,6 @@
-
+.comment {
+  color: #AAA;
+}
 .edit-snaike input {
   width: 100%;
 }

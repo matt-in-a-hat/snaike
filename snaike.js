@@ -9,7 +9,7 @@ if (Meteor.isClient) {
     return {
       name: 'what',
       colour: '',
-      code: 'function (snakePositions, myIndex, myDirection) {\n  return 0;\n}',
+      code: 'return 0;',
       createdAt: new Date(),
       version: 0
     }

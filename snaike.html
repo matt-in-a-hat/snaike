@@ -1,0 +1,35 @@
+<head>
+  <title>snAIke</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Choose the snAIkes to battle</h1>
+      {{#with viewedSnaike}}
+        {{> creation}}
+      {{/with}}
+    </header>
+
+    <ul class="snaike-list">
+      {{#each snaikes}}
+        {{> snaike}}
+      {{/each}}
+    </ul>
+  </div>
+</body>
+
+<template name="creation">
+  <form class="edit-snaike">
+    <input type="text" name="name" value="{{name}}" placeholder="snAIke name" />
+    <button class="save">Save</button>
+  </form>
+</template>
+
+<template name="snaike">
+  <li>
+    <input type="checkbox" checked="{{checked}}" class="select" />
+    <span>v{{version}}</span> {{name}}
+    <button class="view">View</button>
+  </li>
+</template>

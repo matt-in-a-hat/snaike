@@ -26,6 +26,8 @@ if (Meteor.isClient) {
     }
   })
   Template.body.onRendered(function () {
+    // Clear db of snaikes
+    // Snaikes.find({}).forEach(function (s) { Snaikes.remove(s._id) })
     window.initGame()
   })
 

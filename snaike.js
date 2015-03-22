@@ -31,12 +31,13 @@ if (Meteor.isClient) {
 
   var getSnaike = function () {
     var snaike = Session.get('viewedSnaike')
-    snaike.createdAt = new Date()
-    snaike.name = $('.edit-snaike .name').val() || 'Nameless'
-    snaike.colour = $('.edit-snaike .colour').val() || '#DDD'
-    snaike.code = $('.edit-snaike .code').val()
-    snaike.version = snaike.version + 1
-    return snaike
+    return {
+      createdAt: new Date(),
+      name: $('.edit-snaike [name=name]').val() || 'Nameless',
+      colour: $('.edit-snaike [name=colour]').val() || '#DDD',
+      code: $('.edit-snaike [name=code]').val(),
+      version: snaike.version + 1
+    }
   }
 
   Template.creation.events({

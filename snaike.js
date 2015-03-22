@@ -7,7 +7,7 @@ if (Meteor.isClient) {
 
   var newSnaike = function () {
     return {
-      name: 'what',
+      name: '',
       colour: '',
       code: 'return 0;',
       createdAt: new Date(),
@@ -29,18 +29,25 @@ if (Meteor.isClient) {
     window.initGame()
   })
 
+  var getSnaike = function () {
+    var snaike = Session.get('viewedSnaike')
+    snaike.createdAt = new Date()
+    snaike.name = $('.edit-snaike .name').val() || 'Nameless'
+    snaike.colour = $('.edit-snaike .colour').val() || '#DDD'
+    snaike.code = $('.edit-snaike .code').val()
+    snaike.version = snaike.version + 1
+    return snaike
+  }
+
   Template.creation.events({
-    'submit .edit-snaike': function (event) {
-
-      Snaikes.insert({
-        createdAt: new Date(),
-        name: event.target.name.value || 'Nameless',
-        colour: event.target.colour.value || '#DDD',
-        code: event.target.code.value,
-        version: Session.get('viewedSnaike').version + 1
-      })
-
+    'submit .edit-snaike': function () {
+      Snaikes.insert(getSnaike())
       Session.set('viewedSnaike', newSnaike())
+      return false
+    },
+    'click .test': function () {
+      var snaike = getSnaike()
+      window.startGame([snaike])
       return false
     }
   })

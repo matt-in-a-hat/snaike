@@ -3,7 +3,7 @@
 // Date: 2013
 //
 'use strict';
-var initSnaikeGame = function() {
+window.startGame = (function () {
 
 
     //context.clearRect(0,0,canvas.width,canvas.height);
@@ -461,70 +461,22 @@ var initSnaikeGame = function() {
 
     var allSnakes;
 
-    var start = function(snakeConstructors) {
-        restart = function() {
-            var re = allSnakes && allSnakes.ticking;
-            allSnakes = [
-                PrivateSnake(MattsPantsMonster()),
-                PrivateSnake(SexyAndIKnowIt())
-            ];
-            allSnakes.ticking = true;
-            if (snakeConstructors) {
-                snakeConstructors.forEach(function(d) {
-                    var snake = PublicSnake.apply(this, d);//(d[0], d[1], d[2], d[3], d[4]);
-                    if (snake) snake = PrivateSnake(snake);
-                    if (snake) allSnakes.push(snake);
-                });
-            }
-            if (!re) tick();
+    var start = function (snakeConstructors) {
+        var re = allSnakes && allSnakes.ticking;
+        allSnakes = [
+            PrivateSnake(MattsPantsMonster()),
+            PrivateSnake(SexyAndIKnowIt())
+        ];
+        allSnakes.ticking = true;
+        if (snakeConstructors) {
+            snakeConstructors.forEach(function(d) {
+                var snake = PublicSnake.apply(this, d);//(d[0], d[1], d[2], d[3], d[4]);
+                if (snake) snake = PrivateSnake(snake);
+                if (snake) allSnakes.push(snake);
+            });
         }
-        restart();
+        if (!re) tick();
     };
 
-    var restart = start;
-
-    (function() {
-        var resetBtn = document.getElementById('reset');
-        resetBtn.addEventListener('click', function (e) {
-            restart();
-        });
-
-        var testAiBtn = document.getElementById('test_ai');
-        testAiBtn.addEventListener('click', function (e) {
-            var name = document.getElementById('snaike_name').value;
-            var colour = document.getElementById('snaike_colour').value;
-            var ai = document.getElementById('snaike_ai').value;
-            var cons = [name, colour, "#000000", {}, ai];
-            e.preventDefault();
-            start([cons]);
-        });
-
-        var selectedBtn = document.getElementById('battle_selected');
-        selectedBtn.addEventListener('click', function (e) {
-            var snakeCons = [];
-            var boxs = $('[type="checkbox"]'), i;
-            for (i=0;i<boxs.length;i++) {
-                var box = boxs[i];
-                if (box.checked) {
-                    var tr = $(box).parent().parent()[0];
-                    var id = tr.id.split("_")[1];
-                    var name = $($('#snaikeName_'+id)[0]).text();
-                    var colour = $($('#snaikeColour_'+id)[0]).text();
-                    if (colour == "") colour = "#EEEEEE";
-                    var ai = $($('#snaikeAI_'+id)[0]).text();
-                    snakeCons.push([name, colour, "#000000", {}, ai]);
-                    // function() {
-                    //     var snake = PublicSnake(name, colour, "#000000", {}, ai);
-                    //     if (snake) snake = PrivateSnake(snake);
-                    //     return snake;
-                    // };
-                    // snakeCons.push(cons);
-                }
-            }
-            start(snakeCons);
-        });
-
-    })();
-
-    start();
-};
+    return start;
+})();

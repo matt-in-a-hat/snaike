@@ -1,26 +1,28 @@
 <head>
-  <title>snAIke</title>
+  <title>snaike</title>
 </head>
 
 <body>
   <div class="container">
-    <h1>snAIke!</h1>
+    <h1>snaike!</h1>
     <canvas id="game_canvas" width="800" height="400">
     </canvas>
-    <div>
-      <h2>Choose the snAIkes to battle</h2>
-      {{#with viewedSnaike}}
-        {{> creation}}
-      {{/with}}
-    </div>
 
+    <h2>Choose snaikes to battle</h2>
     <ul class="snaike-list">
       {{#each snaikes}}
         {{> snaike}}
       {{/each}}
     </ul>
-
     <button class="battle">Battle selected snaikes</button>
+
+    <h2>Create your own snaike</h2>
+    <div>
+      {{#with viewedSnaike}}
+        {{> creation}}
+      {{/with}}
+    </div>
+
   </div>
 </body>
 
@@ -28,8 +30,8 @@
   <form class="edit-snaike">
     <table>
       <tr>
-        <td><label for="edit-snaike-name">Snaike name:</label></td>
-        <td><input id="edit-snaike-name" type="text" name="name" value="{{name}}" placeholder="snAIke name" /></td>
+        <td><label for="edit-snaike-name">SnAIke name:</label></td>
+        <td><input id="edit-snaike-name" type="text" name="name" value="{{name}}" placeholder="snaike name" /></td>
       </tr>
       <tr>
         <td><label for="edit-snaike-colour">Colour:</label></td>
@@ -64,6 +66,6 @@
   <li>
     <input type="checkbox" class="select" data-id="{{_id}}" />
     <span>v{{version}}</span> {{name}}
-    <button class="view">View</button>
+    <button class="view">View or edit</button>
   </li>
 </template>

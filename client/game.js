@@ -361,7 +361,7 @@ window.initGame = function () {
             movingCount += 1;
             if (movingCount===toMoveCount) {
                 renderGame();
-                var timeUntilAgain = 250 - ((new Date()).getTime()-time);
+                var timeUntilAgain = 150 - ((new Date()).getTime()-time);
                 if (timeUntilAgain < 0) {
                     timeUntilAgain = 0;
                 }

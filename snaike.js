@@ -19,7 +19,7 @@ if (Meteor.isClient) {
 
   Template.body.helpers({
     snaikes: function () {
-      return Snaikes.find({}, {sort: {createdAt: -1}})
+      return Snaikes.find({}, {sort: {version: -1, createdAt: -1}})
     },
     viewedSnaike: function () {
       return Session.get('viewedSnaike')
@@ -33,12 +33,19 @@ if (Meteor.isClient) {
 
   var getSnaike = function () {
     var snaike = Session.get('viewedSnaike')
+    var latest;
+    var originalId = snaike.originalId ? snaike.originalId : snaike._id
+    if (originalId) {
+      latest = Snaikes.findOne({ originalId: originalId }, {sort: {version: -1}})
+      console.log(latest)
+    }
     return {
       createdAt: new Date(),
       name: $('.edit-snaike [name=name]').val() || 'Nameless',
       colour: $('.edit-snaike [name=colour]').val() || '#DDD',
       code: $('.edit-snaike [name=code]').val(),
-      version: snaike.version + 1
+      version: latest ? latest.version + 1 : snaike.version + 1,
+      originalId: originalId
     }
   }
 

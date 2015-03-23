@@ -177,15 +177,15 @@ window.initGame = function () {
             "Right": 1
         };
         _this.turn = 0;
-        // gameRenderer.canvas.parentElement.addEventListener('keydown', function (e) {
-        //     var key = e.keyIdentifier;
-        //     if (keys[key]) {
-        //         e.preventDefault();
-        //         if (_this.turn===0) {
-        //             _this.turn = keys[key];
-        //         }
-        //     }
-        // });
+        gameRenderer.canvas.parentElement.addEventListener('keydown', function (e) {
+            var key = e.keyIdentifier;
+            if (keys[key]) {
+                e.preventDefault();
+                if (_this.turn===0) {
+                    _this.turn = keys[key];
+                }
+            }
+        });
 
         _this.think = function (snakePositions, myIndex, myDirection) {
             var t = _this.turn;

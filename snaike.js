@@ -1,5 +1,5 @@
 'use strict';
-/*globals Mongo,Meteor,Template,Session*/
+/*globals Mongo,Meteor,Template,Session,$*/
 
 var Snaikes = new Mongo.Collection('snaikes')
 
@@ -60,6 +60,21 @@ if (Meteor.isClient) {
     },
     'click .view': function () {
       Session.set('viewedSnaike', this)
+    }
+  })
+
+  Template.body.events({
+    'click .battle': function () {
+      var ids = []
+      $('.snaike-list input:checked').each(function () {
+        ids.push($(this).attr('data-id'))
+      })
+      var snaikes = Snaikes.find({ _id: { $in: ids } }).fetch()
+      console.log(ids, snaikes)
+      if (snaikes.length > 0) {
+        window.startGame(snaikes)
+      }
+      return false
     }
   })
 }

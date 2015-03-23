@@ -19,6 +19,8 @@
         {{> snaike}}
       {{/each}}
     </ul>
+
+    <button class="battle">Battle selected snaikes</button>
   </div>
 </body>
 
@@ -60,7 +62,7 @@
 
 <template name="snaike">
   <li>
-    <input type="checkbox" checked="{{checked}}" class="select" />
+    <input type="checkbox" class="select" data-id="{{_id}}" />
     <span>v{{version}}</span> {{name}}
     <button class="view">View</button>
   </li>

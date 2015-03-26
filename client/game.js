@@ -177,7 +177,7 @@ window.initGame = function () {
             "Right": 1
         };
         _this.turn = 0;
-        gameRenderer.canvas.parentElement.addEventListener('keydown', function (e) {
+        window.addEventListener('keydown', function (e) {
             var key = e.keyIdentifier;
             if (keys[key]) {
                 e.preventDefault();
@@ -310,7 +310,7 @@ window.initGame = function () {
         _this.die = function(reason) {
             _this.alive = false;
             _this.turn = null;
-            console.log(reason, _this);
+            console.log(reason);
         };
 
         return _this;

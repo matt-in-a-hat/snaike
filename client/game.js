@@ -179,7 +179,7 @@ window.initGame = function () {
         _this.turn = 0;
         window.addEventListener('keydown', function (e) {
             var key = e.keyIdentifier;
-            if (keys[key]) {
+            if (keys[key] && (e.target.nodeName === 'BODY' || e.target.nodeName === 'BUTTON')) {
                 e.preventDefault();
                 if (_this.turn===0) {
                     _this.turn = keys[key];

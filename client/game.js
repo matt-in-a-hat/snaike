@@ -248,6 +248,10 @@ window.initGame = function () {
 
         var worker = new Worker('/worker.js');
         worker.postMessage({
+            command: 'init',
+            arguments: [gameRenderer.gridHeight, gameRenderer.gridWidth]
+        });
+        worker.postMessage({
             command: 'evaluateFunction',
             arguments: [options.code]
         });

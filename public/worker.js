@@ -2,6 +2,40 @@
 /*globals self, postMessage*/
 
 var userFunction;
+var gridWidth;
+var gridHeight;
+
+var calculateNextPosition = function(pos, dir) {
+  var newPos;
+  dir = dir%4;
+  if (dir === 0) {
+      newPos = [pos[0], pos[1] -1];
+  } else if (dir === 1) {
+      newPos = [pos[0] + 1, pos[1]];
+  } else if (dir === 2) {
+      newPos = [pos[0], pos[1] + 1];
+  } else if (dir === 3) {
+      newPos = [pos[0] - 1, pos[1]];
+  }
+  if (newPos[0] > gridWidth) {
+      newPos[0] = 0;
+  }
+  if (newPos[0] < 0) {
+      newPos[0] = gridWidth;
+  }
+  if (newPos[1] > gridHeight) {
+      newPos[1] = 0;
+  }
+  if (newPos[1] < 0) {
+      newPos[1] = gridHeight;
+  }
+  return newPos;
+};
+
+self.init = function (height, width) {
+  gridHeight = height;
+  gridWidth = width;
+}
 
 self.evaluateFunction = function (code) {
   var fn;

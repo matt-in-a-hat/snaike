@@ -496,10 +496,11 @@ window.initGame = function () {
 
     var start = function (snakeObjects) {
         var re = allSnakes && allSnakes.ticking;
-        allSnakes = [
-            PrivateSnake(MattsPantsMonster()),
-            PrivateSnake(SexyAndIKnowIt())
-        ];
+        allSnakes = [];
+        if (snakeObjects.length === 1) {
+            allSnakes.push(PrivateSnake(MattsPantsMonster()));
+            // PrivateSnake(SexyAndIKnowIt())
+        }
         allSnakes.ticking = true;
         if (snakeObjects) {
             snakeObjects.forEach(function (snakeInfo) {

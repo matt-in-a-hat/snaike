@@ -250,7 +250,7 @@ window.initGame = function () {
                 eval("f = function (snakePositions, myIndex, myDirection) { "+options.code+" }");
                 return f;
             })();
-        console.log("public", _this, "think", _this.think);
+        // console.log("public", _this, "think", _this.think);
         // } catch (e) {
         //     killSnake(_this, e);
         //     return false;
@@ -277,6 +277,12 @@ window.initGame = function () {
         _this.position = pos.position;
         // Increments each time the game ticks faster than the asynchronous user defined AI runs
         _this.missedTurnCount = 0;
+
+        _this.die = function(reason) {
+            _this.alive = false;
+            _this.turn = null;
+            console.log(reason, _this);
+        };
 
         return _this;
     };
@@ -331,13 +337,6 @@ window.initGame = function () {
     //     }
     // };
     // var loop = setInterval(tick, 250);
-
-
-    var killSnake = function(snake, reason) {
-        snake.alive = false;
-        snake.turn = null;
-        console.log(reason, snake);
-    };
 
     var tick = function() {
         if (!allSnakes.ticking) return;
@@ -448,12 +447,12 @@ window.initGame = function () {
                             // Collided with allSnakes[s]
                             var late = allSnakes[s].alive ? "" : "the late ";
                             var stupidly = allSnakes[s].alive ? "" : " stupidly";
-                            killSnake(headSnake, headSnake.name+stupidly+" ran into "+late+allSnakes[s].name+"!");
+                            headSnake.die(headSnake.name+stupidly+" ran into "+late+allSnakes[s].name+"!");
                             dehead.push(headSnake);
                         } else {
                             if (hadItself) {
                                 // Collided with self
-                                killSnake(headSnake, headSnake.name+" killed itself!");
+                                headSnake.die(headSnake.name+" killed itself!");
                             }
                             hadItself = true;
                         }

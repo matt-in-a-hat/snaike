@@ -187,10 +187,10 @@ window.initGame = function () {
             }
         });
 
-        _this.think = function (snakePositions, myIndex, myDirection) {
+        _this.think = function (snakePositions, myIndex, myDirection, done) {
             var t = _this.turn;
             _this.turn = 0;
-            return t;
+            done(t);
         };
 
         return _this;
@@ -204,7 +204,7 @@ window.initGame = function () {
             code: ''
         });
 
-        _this.think = function (snakePositions, myIndex, myDirection) {
+        _this.think = function (snakePositions, myIndex, myDirection, done) {
             //calculate distance to wall
             //check for collisions with self
             //check for collisions with other snakes
@@ -224,9 +224,10 @@ window.initGame = function () {
                 });
             })
             if (nextCoordinateIsDeath === true) {
-                return -1;
+                done(-1);
+            } else {
+                done(probablyGoodMove);
             }
-            return probablyGoodMove;
         };
 
         return _this;
@@ -244,12 +245,40 @@ window.initGame = function () {
         var turnDirection = turnDirection;
         var snakeAtPosition = gameRenderer.snakeAtPosition;
         // try {
-            _this.think = (function() {
-                // TODO: Potentially attempt to sandbox here
-                var f;
-                eval("f = function (snakePositions, myIndex, myDirection) { "+options.code+" }");
-                return f;
-            })();
+
+        var worker = new Worker('/worker.js');
+        worker.postMessage({
+            command: 'evaluateFunction',
+            arguments: [options.code]
+        });
+        var thinkSuccess = false;
+        worker.onmessage = function (event) {
+            if (event.data) {
+                thinkSuccess = true;
+            }
+        };
+
+        _this.think = function (snakePositions, myIndex, myDirection, done) {
+            if (thinkSuccess) {
+                worker.onmessage = function (event) {
+                    done(event.data);
+                };
+                worker.postMessage({
+                    command: 'runFunction',
+                    arguments: [snakePositions, myIndex, myDirection]
+                });
+            } else {
+                done(0);
+            }
+        };
+        // TODO stop worker
+
+            // _this.think = (function() {
+            //     // TODO: Potentially attempt to sandbox here
+            //     var f;
+            //     eval("f = function (snakePositions, myIndex, myDirection) { "+options.code+" }");
+            //     return f;
+            // })();
         // console.log("public", _this, "think", _this.think);
         // } catch (e) {
         //     killSnake(_this, e);
@@ -386,21 +415,13 @@ window.initGame = function () {
             }
         }
         if (snake.turn === null) {
-            setTimeout(function() {
-                var direction;
-                // try {
-                    (function() {
-                        direction = snake.publicSnake.think(snakePositions, yourIndex, snake.direction);
-                    })();
-                // } catch (e) {
-                //     killSnake(snake, e);
-                // }
+            snake.publicSnake.think(snakePositions, yourIndex, snake.direction, function (direction) {
                 snake.turn = Number(direction);
                 if (isNaN(snake.turn)) {
                     snake.turn = 0;
                 }
                 afterMove();
-            }, 1);
+            });
         } else {
             snake.missedTurnCount += 1;
         }

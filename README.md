@@ -8,6 +8,7 @@ Run using meteor
 ## TODO
 
 - Some styling love
-- Add some help info
+- Improve help info
 - Inject a text editor
 - Tidy up game.js :(
+- Add voting to snaikes in the battle list to sway sorting

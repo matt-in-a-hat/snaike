@@ -23,6 +23,33 @@
       {{/with}}
     </div>
 
+    <div>
+      <h2>More information</h2>
+      <p>Create artificially intelligent snakes by writing them a JavaScript brain.</p>
+      <p>On each animation tick we call the snaike's "think" function, in which you can determine the best move for your snaike to make, be it turn left, turn right, or go straight.</p>
+      <p>Your snaike's next move is determined by the return value of the function that you write the body of. If your function returns a number less than 0 the snaike will turn left, 0 will go straight, and greater than 0 will make it turn right.</p>
+      <p>You can battle any existing saved snaikes.</p>
+      <p>You can view the logic for any existing snaike by clicking "View or edit". You can then make changes and save it as a new version, or create one from scratch.</p>
+      <p>You can test out your snaike before saving it by using the test button. This runs it in the battle area above, pitting it against the "MPM" snaike which is controllable by your arrow keys for convenience of testing.</p>
+
+      <h3>API</h3>
+      <p>Some information is provided to help you:</p>
+      <p><strong>snakePositions</strong></p>
+      <p>This is the position on the game board of all snaikes. It is an array of snaikes, in which your snaike is at <strong>myIndex</strong>. Each snaike in the array is itself an array of points, 1 point for each square of the snaikes body, with the head being the last item in the array. Each point is, again, another array, with the x and y position value e.g. [10, 20].</p>
+      <p><strong>myIndex</strong></p>
+      <p>The index into snakePositions of your snaike</p>
+      <p><strong>myDirection</strong></p>
+      <p>This indicates which way the head of your snaike is facing, and hence which way it will go if you return 0 (go straight). 0 = up, 1 = right, 2 down, or 3 = left.</p>
+      <p><strong>game.gridHeight and game.gridWidth</strong></p>
+      <p>The number of squares on the game board, each piece of a snake takes up 1 square. Note that the game board automatically wraps. E.g. if your snaike is at the top (say position [10, 0]) and you continue upward, your snaike will next be at the bottom ([10, <strong>game.gridHeight</strong>])</p>
+      <p><strong>game.calculateNextPosition(pos, dir)</strong></p>
+      <p>Takes a position e.g. [10, 15], and a direction e.g. 3, and returns the new position e.g. [9, 15]. This is most useful for you to pass your snaike's head position and a direction relative to your current direction to find out what position you'll move to. Don't worry about the direction being greater than 3 or less than 0, it will wrap automatically. For example:</p>
+      <p>
+        var mySnake = snakePositions[myIndex];<br />
+        var myHeadPos = mySnake[mySnake.length - 1]; //e.g. [10, 15]<br />
+        var myPosIfTurnRight = game.calculateNextPosition(myHeadPos, myDirection + 1); //e.g. [9, 15]<br />
+      </p>
+    </div>
   </div>
 </body>
 

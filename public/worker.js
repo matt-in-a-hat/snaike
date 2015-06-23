@@ -2,10 +2,9 @@
 /*globals self, postMessage*/
 
 var userFunction;
-var gridWidth;
-var gridHeight;
+var game = {};
 
-var calculateNextPosition = function(pos, dir) {
+game.calculateNextPosition = function(pos, dir) {
   var newPos;
   dir = dir%4;
   if (dir === 0) {
@@ -17,24 +16,24 @@ var calculateNextPosition = function(pos, dir) {
   } else if (dir === 3) {
       newPos = [pos[0] - 1, pos[1]];
   }
-  if (newPos[0] > gridWidth) {
+  if (newPos[0] > game.gridWidth) {
       newPos[0] = 0;
   }
   if (newPos[0] < 0) {
-      newPos[0] = gridWidth;
+      newPos[0] = game.gridWidth;
   }
-  if (newPos[1] > gridHeight) {
+  if (newPos[1] > game.gridHeight) {
       newPos[1] = 0;
   }
   if (newPos[1] < 0) {
-      newPos[1] = gridHeight;
+      newPos[1] = game.gridHeight;
   }
   return newPos;
 };
 
 self.init = function (height, width) {
-  gridHeight = height;
-  gridWidth = width;
+  game.gridHeight = height;
+  game.gridWidth = width;
 }
 
 self.evaluateFunction = function (code) {

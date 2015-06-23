@@ -38,7 +38,7 @@ self.init = function (height, width) {
 
 self.evaluateFunction = function (code) {
   var fn;
-  eval('fn = function (snakePositions, myIndex, myDirection) { ' + code + ' }');
+  eval('fn = function (snakePositions, myIndex, myDirection) {\n' + code + '\n}');
   if (typeof fn === 'function') {
     userFunction = fn;
     postMessage(true);

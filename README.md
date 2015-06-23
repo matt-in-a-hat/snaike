@@ -2,7 +2,7 @@
 
 Battle snakes via user-defined AI!
 
-Run using meteor
+Run locally using meteor or see [snaike.meteor.com](http://snaike.meteor.com)
 
 
 ## TODO

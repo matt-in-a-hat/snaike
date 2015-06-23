@@ -2,6 +2,8 @@
 // Author: Matt Lang, Lewis Christie
 // Date: 2013
 //
+// I sincerely apologise for the state of this file
+
 'use strict';
 window.initGame = function () {
 

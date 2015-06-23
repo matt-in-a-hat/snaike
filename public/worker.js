@@ -3,6 +3,7 @@
 
 var userFunction;
 var game = {};
+var store = {};
 
 game.calculateNextPosition = function(pos, dir) {
   var newPos;
@@ -48,6 +49,7 @@ self.evaluateFunction = function (code) {
 }
 
 self.runFunction = function (argsArray) {
+  store = store || {};
   if (typeof userFunction !== 'function') {
     postMessage(0);
   } else {

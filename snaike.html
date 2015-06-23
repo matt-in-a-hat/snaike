@@ -49,6 +49,14 @@
         var myHeadPos = mySnake[mySnake.length - 1]; //e.g. [10, 15]<br />
         var myPosIfTurnRight = game.calculateNextPosition(myHeadPos, myDirection + 1); //e.g. [9, 15]<br />
       </p>
+      <p><strong>store</strong></p>
+      <p>store is just an object that you can store values on. For example if you wanted to keep track of the game tick count:</p>
+      <p>
+        if (!store.counter) store.counter = 0;<br />
+        store.counter += 1;<br />
+        //turn every 10 ticks<br />
+        return store.counter % 10 === 0 ? -1 : 0;<br />
+      </p>
     </div>
   </div>
 </body>

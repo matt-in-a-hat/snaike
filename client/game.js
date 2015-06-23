@@ -164,9 +164,9 @@ window.initGame = function () {
         return dir;
     }
 
-    var MattsPantsMonster = function () {
+    var MPM = function () {
         var _this = PublicSnake({
-            name: 'Matt\'s Pants Monster',
+            name: 'MPM',
             colour: '#F4F400',
             headColour: '#999999',
             code: ''
@@ -498,7 +498,7 @@ window.initGame = function () {
         var re = allSnakes && allSnakes.ticking;
         allSnakes = [];
         if (snakeObjects.length === 1) {
-            allSnakes.push(PrivateSnake(MattsPantsMonster()));
+            allSnakes.push(PrivateSnake(MPM()));
             // PrivateSnake(SexyAndIKnowIt())
         }
         allSnakes.ticking = true;
